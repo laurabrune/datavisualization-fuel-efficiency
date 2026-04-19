@@ -11,7 +11,7 @@ theme_custom_super <- theme_custom_basis +
   theme(plot.title = element_text(face = "bold", hjust = 0.5))
 
 
-  
+
 
 #### Figure 1: Emission Sektor ----
 f_emission_sector <- ggplot(emission_usa, aes(x = Year, y = vals_new, colour = Sectors)) + 
@@ -173,7 +173,7 @@ plot_cylinder_boxplot <- function(variable_name, title) {
 f_nCylinders_hwy <- plot_cylinder_boxplot(lp100km_hwy, "... on the Highway")
 
 # boxplot for City 
-f_nCylinders_hwy <- plot_cylinder_boxplot(lp100km_city, "... in the City")
+f_nCylinders_city <- plot_cylinder_boxplot(lp100km_city, "... in the City")
 
 f_share_cylinders <- cars_cylinders %>%
   ggplot(aes(x = 1, y = share, fill = as.factor(cylinders))) +
