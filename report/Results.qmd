@@ -14,72 +14,14 @@ knitr::opts_chunk$set(echo = TRUE, error = TRUE)
 ```
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
-# packages and read data 
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-library(ggrepel)
 
-cars <- read_csv('cars.csv')
-emission <- read_csv("ghg-emissions-by-sector.csv")
-
-# get an overview of the data 
-summary(cars)
-table(cars$make)
-range(cars$year)
-table(cars$class)
-table(cars$transmission)
-table(cars$eng_size)
-
-# recoding as mpg is an american unit and the report is for an international institution 
-table(cars$mpg_hwy)
-cars$lp100km_hwy <- round((235.214583 / cars$mpg_hwy), 2)
-table(cars$lp100km_hwy)
-
-table(cars$mpg_city)
-cars$lp100km_city <- round((235.214583 / cars$mpg_city), 2)
-table(cars$lp100km_city)
-
-# more overview 
-summary(cars$lp100km_hwy)
-summary(cars$lp100km_city)
-
-# exclude 2015 because there is less data 
-cars <- cars %>%
-  filter(year < 2015)
-
-# emission data usa in long format 
-emission_usa <- emission %>%
-  filter(Entity == "United States") %>%
-  pivot_longer(cols = Agriculture:`Aviation and shipping`, names_to= "Sectors", values_to= "values") %>%
-  group_by(Year) %>%
-  mutate(
-    `All Sectors` = sum(values)
-  ) %>%
-  filter(Sectors == "Transport") %>% 
-  select(-Entity, -Code, -Sectors) %>%
-  rename(Transportation = values) %>%
-  pivot_longer(cols = c(Transportation, `All Sectors`), names_to = "Sectors", values_to = "vals") %>%
-  mutate(vals_new = vals / 1000000000)
 ```
 
 # **Emissions of American Cars: A Datavisualization** 
 
 
 ```{r, echo=FALSE, message=FALSE, warning=FALSE}
-ggplot(emission_usa, aes(x = Year, y = vals_new, colour = Sectors)) + 
-  geom_line(size = 1) + 
-  labs(title = "Figure 1: Emissions of all Sectors vs. Transportation in the US", 
-       y = "Tonnes of Carbon Dioxid in Bilion", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5), 
-    legend.text = element_text(size = 12), 
-    legend.title = element_blank(),
-    ) + 
-  scale_color_viridis_d(begin = 0.4, end = 0.1)
+
 ```
 
 
