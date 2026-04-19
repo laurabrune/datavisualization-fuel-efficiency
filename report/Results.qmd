@@ -2,7 +2,14 @@
 title: 'What car characteristics increase Fuel Efficiency?'
 author: "Laura Brune"
 date: "2026-04-19"
-format: html
+fig-cap: false
+format: 
+  html: 
+    toc: true 
+    number-sections: true
+    css: styles.css
+    theme: "flatly"
+    toc-location: left
 ---
 
 # Emissions of American Cars: A Datavisualization 
@@ -60,7 +67,7 @@ While this explanation seems reasonable, it cannot be confirmed with the data. F
 #| message: false
 #| echo: false
 #| label: "fig-eu-nonEu-time"
-#| fig-height: 6
+#| fig-height: 10
 
 
 f_EU_NonEU_time
@@ -79,7 +86,7 @@ Over the decades, the proportion of cars with automatic gearboxes has grown. By 
 #| message: false
 #| echo: false
 #| label: "fig-automatic-year"
-#| fig-height: 8
+#| fig-height: 10
 
 
 f_automatic_year_total
@@ -93,7 +100,7 @@ f_automatic_year_total
 #| message: false
 #| echo: false
 #| label: "fig-n-gears"
-#| fig-height: 6
+#| fig-height: 8
 
 
 f_nGears_total
@@ -111,7 +118,7 @@ Figure 4 shows similar results for driving on the highway. Here, the variation d
 #| message: false
 #| echo: false
 #| label: "fig-n-gears-year"
-#| fig-height: 6
+#| fig-height: 8
 
 
 f_nGears_annual_total
@@ -129,7 +136,7 @@ It is only since 2009 that a relationship between the two variables has been evi
 #| message: false
 #| echo: false
 #| label: "fig-n-cylinders"
-#| fig-height: 6
+#| fig-height: 8
 
 
 f_Cylinders

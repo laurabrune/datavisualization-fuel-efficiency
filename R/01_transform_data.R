@@ -41,8 +41,12 @@ cars_processed$number_gear <- sub(".*?(\\d+).*", "\\1", cars_processed$gear)
 table(cars_processed$number_gear)
 cars_processed$number_gear[cars_processed$number_gear == "(AV)" | cars_processed$number_gear == "(variable gear ratios)"] <- NA
 
-## create some new variables about mean and predominant gear 
+# create some new variables about mean and predominant gear 
 cars_processed$number_gear <- as.numeric(cars_processed$number_gear)
+
+# New Variable: make is from a EU-country 
+eu_brands <- c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo")
+cars_processed <- cars_processed %>% mutate(is_eu = make %in% eu_brands)
 
 # save data 
 write.csv(cars_processed,"data/processed/cars_processed.csv")
@@ -73,6 +77,7 @@ cars_annual <- cars_processed %>%
 
 # save data 
 write.csv(cars_annual,"data/processed/cars_annual_processed.csv")
+
 
 #### Share of Cylinders per Year ----
 cars_cylinders <- cars_processed %>% 

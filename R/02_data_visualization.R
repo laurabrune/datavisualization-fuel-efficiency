@@ -1,95 +1,63 @@
-# 02_data_visualization 
+# 02_data_visualization
+
+#### Preparations ----
+theme_custom_basis <- theme_minimal() +
+  theme(
+    legend.title = element_blank(),
+    legend.text = element_text(size = 12)
+  )
+
+theme_custom_super <- theme_custom_basis +
+  theme(plot.title = element_text(face = "bold", hjust = 0.5))
+
+
+  
 
 #### Figure 1: Emission Sektor ----
 f_emission_sector <- ggplot(emission_usa, aes(x = Year, y = vals_new, colour = Sectors)) + 
   geom_line(size = 1) + 
-  labs(y = "Tonnes of Carbon Dioxid in Bilion", 
+  labs(title = "Emissions of all Sectors and Transportation over Time",
+       y = "Tonnes of Carbon Dioxid in Billion", 
        x = "Years") + 
-  theme_minimal() + 
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5), 
-    legend.text = element_text(size = 12), 
-    legend.title = element_blank(),
-  ) + 
+  theme_custom_super + 
   scale_color_viridis_d(begin = 0.4, end = 0.1)
 
 #### Figure 3: Fuel Efficiency over time 
-f_time <- cars_processed %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "Figure 1: The average Fuel Efficiency is increasing", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5,), 
-    legend.position = "bottom",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-  ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4)
+# function for all grafics over time 
+plot_fuel_trend <- function(data, title, legend_pos = "bottom") {
+  data %>%
+    group_by(year) %>%
+    summarise(
+      City = mean(lp100km_city, na.rm = TRUE),
+      Highway = mean(lp100km_hwy, na.rm = TRUE)
+    ) %>%
+    pivot_longer(c(City, Highway), names_to = "type", values_to = "value") %>%
+    
+    ggplot(aes(year, value, colour = type)) +
+    geom_line(linewidth = 1) +
+    scale_y_continuous(limits = c(0, 20)) +
+    scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) +
+    scale_color_viridis_d(begin = 0.1, end = 0.4) +
+    labs(title = title, x = "Years", y = "Mean Litres per 100 km") +
+    theme_custom_basis +
+    theme(legend.position = legend_pos)
+}
 
-#### Figure 4: Fuel Efficiency over Time EU vs. Non-EU 
+f_time <- plot_fuel_trend(cars_processed, "Fuel efficiency over time")  
+
+#### Figure 4: Fuel Efficiency over Time EU vs. Non-EU
+# eu
 f_timeEU <- cars_processed %>%
-  mutate(isEuropean = ifelse(
-    make %in% c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo"), 1, 0)) %>%
-  filter(isEuropean == 1) %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "... from European car companies", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme( 
-    legend.position = "none",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-  ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4) 
+  filter(is_eu == TRUE) %>%
+  plot_fuel_trend("... from EU brands", legend_pos = "none")
 
-f_timeNonEU <- cars_processed %>%
-  mutate(isEuropean = ifelse(
-    make %in% c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo"), 1, 0)) %>%
-  filter(isEuropean == 0) %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "... from non-European car companies", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme( 
-    legend.position = "bottom",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-  ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4) 
+#non-EU
+f_time_nonEU <- cars_processed %>%
+  filter(is_eu == FALSE) %>%
+  plot_fuel_trend("... from non-EU brands", legend_pos = "none")
 
-f_EU_NonEU_time <- f_timeEU / f_timeNonEU + 
+# both 
+f_EU_NonEU_time <- f_timeEU / f_time_nonEU + 
   plot_layout(axes="collect") + 
   plot_annotation(title = "Figure 2: Relationship between Time and Fuel Efficiency ...", 
                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
@@ -102,8 +70,8 @@ f_automatic_year_hwy <- cars_processed %>%
             Highway = mean(lp100km_hwy, na.rm = TRUE)) %>%
   ggplot(aes(y = Highway, x = share_auto)) + 
   geom_point(colour = "#482576FF") + 
-  scale_y_continuous(limits = c(5, 18)) +
-  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
+  coord_cartesian(ylim = c(5, 18)) + 
+  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = TRUE) + 
   theme_minimal() + 
   labs(y = "Mean of Litres per 100 kilometers", 
        x = "Share of Automatic Gears", 
@@ -115,7 +83,7 @@ f_automatic_year_city <- cars_processed %>%
             City = mean(lp100km_city, na.rm = TRUE)) %>%
   ggplot(aes(y = City, x = share_auto)) + 
   geom_point(colour = "#2A788EFF") + 
-  scale_y_continuous(limits = c(5, 18)) +
+  coord_cartesian(ylim = c(5, 18)) +
   geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
   theme_minimal() + 
   labs(y = "Mean of Litres per 100 kilometers", 
@@ -131,29 +99,20 @@ f_automatic_year_total <- f_automatic_year_city / f_automatic_year_hwy +
 f_automatic_year_total
 
 #### Figure 6: Relationship between the Number of Gears and Fuel Efficiency
-f_nGears_hwy <- cars_processed %>%
+plot_gear_boxplot <- function(variable_name, title) {
+  cars_processed %>%
   drop_na() %>%
-  ggplot(aes(x = as.factor(number_gear), y = lp100km_hwy, col = as.factor(number_gear))) + 
+  ggplot(aes(x = as.factor(number_gear), y = {{ variable_name }}, col = as.factor(number_gear))) + 
   geom_boxplot() + 
   theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Gears", 
-       title = "... on the Highway") + 
+  labs(y = "Litres per 100 Kilometers", x = "Number of Gears", title = title) + 
   scale_color_viridis_d() + 
   theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
+  coord_cartesian(ylim = c(2, 32))
+ }
 
-f_nGears_city <- cars_processed %>%
-  drop_na() %>%
-  ggplot(aes(x = as.factor(number_gear), y = lp100km_city, col = as.factor(number_gear))) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Gears", 
-       title = "... in the City") + 
-  scale_color_viridis_d() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
+f_nGears_hwy <- plot_gear_boxplot(lp100km_hwy, "... on the Highway")
+f_nGears_city <- plot_gear_boxplot(lp100km_city, "... in the City")
 
 f_nGears_total <- f_nGears_hwy / f_nGears_city + 
   plot_layout(axes="collect") + 
@@ -195,41 +154,33 @@ f_nGears_annual_total <- f_nGears_annual_city + f_nGears_annual_hwy +
                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
 
 #### Figure 7: Relationship between the Number of Cylinders and Fuel Efficiency
-# boxplot for Highway 
-f_nCylinders_hwy <- cars_processed %>%
-  drop_na(lp100km_hwy, cylinders) %>%
+plot_cylinder_boxplot <- function(variable_name, title) {
+  cars_processed %>%
+  drop_na({{ variable_name }}, cylinders) %>%
   filter(cylinders > 2) %>%
-  ggplot(aes(x = as.factor(cylinders), y = lp100km_hwy, col = cylinders)) + 
+  ggplot(aes(x = as.factor(cylinders), y = {{ variable_name }}, col = cylinders)) + 
   geom_boxplot() + 
   theme_minimal() + 
   labs(y = "Litres per 100 Kilometers", 
        x = "Number of Cylinders", 
-       title = "... on the Highway") + 
+       title = title) + 
   scale_color_viridis_c() + 
   theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
+  coord_cartesian(ylim = c(2, 32))
+}
+
+# boxplot for Highway 
+f_nCylinders_hwy <- plot_cylinder_boxplot(lp100km_hwy, "... on the Highway")
 
 # boxplot for City 
-f_nCylinders_city <- cars_processed %>%
-  drop_na(lp100km_city, cylinders) %>%
-  filter(cylinders > 2) %>%
-  ggplot(aes(x = as.factor(cylinders), y = lp100km_city, col = cylinders)) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Cylinders", 
-       title = "... in the City") + 
-  scale_color_viridis_c() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
+f_nCylinders_hwy <- plot_cylinder_boxplot(lp100km_city, "... in the City")
 
 f_share_cylinders <- cars_cylinders %>%
   ggplot(aes(x = 1, y = share, fill = as.factor(cylinders))) +
   geom_col(width = 0.5) +
   scale_x_continuous(breaks = NULL) +
   scale_y_continuous(breaks = NULL) + 
-  labs(x = NULL, 
-       y = NULL,
+  labs(x = NULL, y = NULL,
        fill='Number of \n Cylinders', 
        title = "Share \n of Cars") + 
   scale_fill_viridis_d() + 
@@ -248,12 +199,11 @@ f_Cylinders <- (f_nCylinders_total |  f_share_cylinders) +
 
 #### Figure 8: Relationship between Fuel Efficiency for different Makes
 f_make <- cars_processed %>%
-  drop_na(lp100km_hwy) %>%
-  drop_na(lp100km_city) %>%
+  drop_na(lp100km_hwy, lp100km_city) %>%
   ggplot(aes(x = lp100km_hwy, y = lp100km_city)) + 
-  geom_point() + 
-  theme_minimal() +
-  labs(title = "Relationship between Fuel Efficiency in the City /n and on the Highway for different Makes", 
+  geom_point(colour = "#482576FF") + 
+  theme_custom_super + 
+  labs(title = "Relationship between Fuel Efficiency in the City \n and on the Highway for different Makes", 
        y = "Litres per 100 Kilometers in the City", 
        x = "Litres per 100 Kilometers on the Highway") +
   facet_wrap(~ make)
