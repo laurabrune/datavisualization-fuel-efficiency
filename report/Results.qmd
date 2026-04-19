@@ -35,89 +35,14 @@ The data is from... However, it should be mentioned that it only contains cars f
 # ** Fuel efficiency over time** 
 
 ```{r eff over time, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-cars %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "Figure 1: The average Fuel Efficiency is increasing", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme(
-    plot.title = element_text(face = "bold", hjust = 0.5,), 
-    legend.position = "bottom",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-    ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4)
+
 ```
 Figure 1 shows that fuel consumption decreased between 1984 and 2015, meaning fuel usage increased during this period. However, this effect has only been clearly visible since the late 2000s. Prior to this, fuel efficiency remained largely unchanged. This shift could be explained by increased car regulations in the EU. Even though European car companies produce different car models for the American and European markets, there could still be spill-over effects.  
 
 While this explanation seems reasonable, it cannot be confirmed with the data. Figure 2 shows that there are only minor differences in fuel efficiency between European and non-European car companies over time. Although European cars have become slightly more fuel efficient since around 2007, this is not sufficient to explain the overall trend. This suggests that EU policy regulations are not having a spill-over effect on the American car market. As there were no other significant events in the late 2000s, this report considers technical reasons for the increase in fuel efficiency. 
 
 ```{r eff over time for eu and non eu, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-timeEU <- cars %>%
-  mutate(isEuropean = ifelse(
-    make %in% c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo"), 1, 0)) %>%
-  filter(isEuropean == 1) %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "... from European car companies", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme( 
-    legend.position = "none",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-    ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4) 
 
-timeNonEU <- cars %>%
-  mutate(isEuropean = ifelse(
-    make %in% c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo"), 1, 0)) %>%
-  filter(isEuropean == 0) %>%
-  group_by(year) %>%
-  summarise(City = mean(lp100km_city), 
-            Highway = mean(lp100km_hwy)) %>%
-  pivot_longer(cols = c(City, Highway), names_to = "city_hwy", values_to = "mean_lp100km") %>%
-  group_by(year) %>%
-  filter(year < 2015) %>% # fewer observations might not be representative 
-  ggplot(aes(y = mean_lp100km, x = year, colour = city_hwy)) + 
-  geom_line(size = 1) + 
-  scale_y_continuous(limits = c(0, 20)) + 
-  labs(title = "... from non-European car companies", 
-       y = "Mean Litres per 100 Kilometers", 
-       x = "Years") + 
-  theme_minimal() + 
-  theme( 
-    legend.position = "bottom",
-    legend.title = element_blank(), 
-    legend.text = element_text(size = 12)
-    ) + 
-  scale_x_continuous(breaks = c(1985, 1995, 2005, 2015)) + 
-  scale_color_viridis_d(begin = 0.1, end = 0.4) 
-
-timeEU / timeNonEU + 
-  plot_layout(axes="collect") + 
-  plot_annotation(title = "Figure 2: Relationship between Time and Fuel Efficiency ...", 
-                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
 ```
 
 # ** Automatic Gear**
@@ -127,95 +52,17 @@ A significant development in American car technology is the growing popularity o
 Over the decades, the proportion of cars with automatic gearboxes has grown. By 2014, more than four fifths of American cars had automatic gearboxes. Automatic gearboxes are generally better for fuel efficiency because they keep the gears within their optimal speed range. This is verified by the data, which shows that fuel efficiency increases with a higher share of automatic transmission. This relationship can be seen for both highway and city driving. The relationship is stronger for city driving than for highway driving. 
 
 ```{r fig.height=7, message=FALSE, warning=FALSE, include=FALSE}
-# Overview about the variable transmission
-table(cars$transmission)
 
-# Create two new variables Number of gears and one that indicates if the car is an automatic or not 
-cars <- cars %>%
-  separate(
-    col = transmission,
-    into = c("auto_manu", "gear"),
-    sep = "\\(|\\s",
-    extra = "merge",
-    fill = "right"
-  )
-
-table(cars$gear)
-cars$number_gear <- sub(".*?(\\d+).*", "\\1", cars$gear)
-table(cars$number_gear)
-cars$number_gear[cars$number_gear == "(AV)" | cars$number_gear == "(variable gear ratios)"] <- NA
-table(cars$auto_manu)
-cars$auto_manu[cars$auto_manu == "Auto"] <- "Automatic"
-cars$auto_manu_num <- ifelse(cars$auto_manu == "Automatic", 1, 0)
-table(cars$auto_manu_num)
 ```
 
 ```{r Share Automatic, fig.height=8, message=FALSE, warning=FALSE, echo=FALSE}
-automatic1 <- cars %>%
-  group_by(year) %>%
-  summarise(share_auto = sum(auto_manu_num) / n(), 
-            Highway = mean(lp100km_hwy, na.rm = TRUE)) %>%
-  ggplot(aes(y = Highway, x = share_auto)) + 
-  geom_point(colour = "#482576FF") + 
-  scale_y_continuous(limits = c(5, 18)) +
-  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
-  theme_minimal() + 
-  labs(y = "Mean of Litres per 100 kilometers", 
-       x = "Share of Automatic Gears", 
-       title = "... on the highway") 
 
-automatic2 <- cars %>%
-  group_by(year) %>%
-  summarise(share_auto = sum(auto_manu_num) / n(), 
-            City = mean(lp100km_city, na.rm = TRUE)) %>%
-  ggplot(aes(y = City, x = share_auto)) + 
-  geom_point(colour = "#2A788EFF") + 
-  scale_y_continuous(limits = c(5, 18)) +
-  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
-  theme_minimal() + 
-  labs(y = "Mean of Litres per 100 kilometers", 
-       x = "Share of Automatic Gears", 
-       title = "... in the City") + 
-  scale_color_viridis_d(begin = 0.1, end = 0.1)
-
-automatic <- automatic2 / automatic1 + 
-  plot_layout(axes="collect") + 
-  plot_annotation(title = "Figure 3: Relationship Year, Share of Automatic Gear and Fuel Efficiency...", 
-                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
-automatic
 ```
 
 # ** Number of Gears**
 
 ```{r n of gears on eff, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-nGearsHwy <- cars %>%
-  drop_na() %>%
-  ggplot(aes(x = as.factor(number_gear), y = lp100km_hwy, col = as.factor(number_gear))) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Gears", 
-       title = "... on the Highway") + 
-  scale_color_viridis_d() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
 
-nGearsCity <- cars %>%
-  drop_na() %>%
-  ggplot(aes(x = as.factor(number_gear), y = lp100km_city, col = as.factor(number_gear))) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Gears", 
-       title = "... in the City") + 
-  scale_color_viridis_d() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
-
-nGearsHwy / nGearsCity + 
-  plot_layout(axes="collect") + 
-  plot_annotation(title = "Figure 4: Relationship between the Number of Gears and Fuel Efficiency...", 
-                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
 ```
 
 Figure 4 shows two box plots for each number of gear: one showing fuel efficiency on the highway and one showing fuel efficiency in the city. In general, more gears lead to better fuel efficiency. However, there are differences between highway and city traffic. Three and four gears perform similarly on the highway, with an average fuel consumption of around 11 litres per 100 kilometres. However, the median for three gears is lower in city traffic, indicating better fuel efficiency for three gears than four in the city. 
@@ -225,64 +72,7 @@ Five gears perform better than four gears in both settings. On the highway, fuel
 Figure 4 shows similar results for driving on the highway. Here, the variation decreases further with an increasing number of gears. While cars with three gears have a median fuel consumption of about 11 litres per 100 kilometres, cars with eight or nine gears have a median fuel consumption of about 9 litres per 100 kilometres. 
 
 ```{r echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-# create some new variables about mean and predominant gear 
-cars$number_gear <- as.numeric(cars$number_gear)
-nGearsData <- cars %>%
-  mutate(gear4 = ifelse(number_gear == 4, 1, 0), 
-         gear5 = ifelse(number_gear == 5, 1, 0),
-         gear6 = ifelse(number_gear == 6, 1, 0),
-         gear7 = ifelse(number_gear == 7, 1, 0)) %>%
-  group_by(year) %>%
-  drop_na(number_gear) %>%
-  summarise(`Mean Number of Gear` = mean(number_gear), 
-            mean_lp100km_city = mean(lp100km_city),
-            mean_lp100km_hwy = mean(lp100km_hwy),
-            share4Gear = mean(gear4), 
-            share5Gear = mean(gear5),
-            share6Gear = mean(gear6),
-            share7Gear = mean(gear7), 
-            .groups = "drop") %>% 
-  rowwise() %>%
-  mutate(
-    majorityGear = c(4, 5, 6, 7)[
-      which.max(c_across(starts_with("share")))
-    ]
-  ) %>%
-  ungroup()
 
-# plot for city 
-nGearsCity2 <- nGearsData %>%
-  ggplot(aes(x = `Mean Number of Gear`, y = mean_lp100km_city, colour = as.factor(majorityGear))) + 
-  geom_point() + 
-  theme_minimal() + 
-  labs(y = "Mean Litres per 100 kilometers",
-       x = "Mean Number of Gears", 
-       color='Predominant Number of Gears', 
-       title = "... in the city") + 
-  scale_x_continuous(limits = c(3.5,7), breaks = c(4, 5, 6, 7)) +
-  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
-  scale_color_viridis_d(begin = 0.00, end = 0.85) + 
-  theme(legend.position = "bottom")
-
-# plot for highway 
-nGearsHwy2 <- nGearsData %>%
-  ggplot(aes(x = `Mean Number of Gear`, y = mean_lp100km_hwy, colour = as.factor(majorityGear))) + 
-  geom_point() + 
-  theme_minimal() + 
-  labs(y = "Mean Litres per 100 kilometers",
-       x = "Mean Number of Gears", 
-       color='Predominant Number of Gears', 
-       title = "... on the highway") + 
-  scale_x_continuous(limits = c(3.5,7), breaks = c(4, 5, 6, 7)) +
-  geom_text_repel(aes(label = year), size = 3, seed = 123, max.overlaps = Inf, point.size = T) + 
-  scale_color_viridis_d(begin = 0.00, end = 0.85) + 
-  theme(legend.position = "none")
-
-# combine 
-nGearsCity2 + nGearsHwy2 + 
-  plot_layout(axes="collect") + 
-  plot_annotation(title = "Figure 5: Mean and Predominant Number of Gears, \n Time and Fuel Efficiency...", 
-                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
 ```
 
 Figure 5 illustrates the correlation between the number of gears and fuel efficiency. The graph shows the mean fuel efficiency and the mean number of gears. The colours indicate whether four-, five- or six-gear cars made up the majority in a given year. Four-gear cars dominated the American car market in the 1980s, 1990s and early 2000s. During this period, a relationship could only be seen between the number of gears and fuel efficiency for highway driving, but not for city driving. This trend continued from 2005 to 2008, when five-speed cars dominated the market. For highway driving, fuel efficiency increased with the number of gears, but there was no relationship between the two variables for city driving.  
@@ -292,65 +82,7 @@ It is only since 2009 that a relationship between the two variables has been evi
 # **Number of Cylinders**
 
 ```{r n of cyl on eff, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-# boxplot for Highway 
-nCylindersHwy <- cars %>%
-  drop_na(lp100km_hwy, cylinders) %>%
-  filter(cylinders > 2) %>%
-  ggplot(aes(x = as.factor(cylinders), y = lp100km_hwy, col = cylinders)) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Cylinders", 
-       title = "... on the Highway") + 
-  scale_color_viridis_c() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
 
-# boxplot for City 
-nCylindersCity <- cars %>%
-  drop_na(lp100km_city, cylinders) %>%
-  filter(cylinders > 2) %>%
-  ggplot(aes(x = as.factor(cylinders), y = lp100km_city, col = cylinders)) + 
-  geom_boxplot() + 
-  theme_minimal() + 
-  labs(y = "Litres per 100 Kilometers", 
-       x = "Number of Cylinders", 
-       title = "... in the City") + 
-  scale_color_viridis_c() + 
-  theme(legend.position = "none") + 
-  scale_y_continuous(limits = c(2, 32))
-
-# data for visualizing the share 
-shareCTable <- cars %>% 
-  drop_na(cylinders) %>%
-  filter(cylinders > 2) %>%
-  group_by(cylinders) %>%
-  summarise(share = n() / 25309) %>%
-  filter(!is.na(share) & share > 0)
-
-# share of cars 
-shareC <- shareCTable %>%
-  ggplot(aes(x = 1, y = share, fill = as.factor(cylinders))) +
-  geom_col(width = 0.5) +
-  scale_x_continuous(breaks = NULL) +
-  scale_y_continuous(breaks = NULL) + 
-  labs(x = NULL, 
-       y = NULL,
-       fill='Number of \n Cylinders', 
-       title = "Share \n of Cars") + 
-  scale_fill_viridis_d() + 
-  theme_minimal() + 
-  theme(legend.position = "right", 
-        plot.title = element_text(hjust = 0.5, margin=margin(0,0,-20,0)) 
-        )
-
-leftSide <-  nCylindersCity / nCylindersHwy + 
-  plot_layout(axes="collect") 
-
-(leftSide |  shareC) + 
-  plot_layout(widths = c(10, 1)) + 
-  plot_annotation(title = "Figure 6: Relationship between the Number of Cylinders \n and Fuel Efficiency...", 
-                  theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
   
 
   
@@ -362,16 +94,7 @@ Since most engines have four, six or eight cylinders, comparing these categories
 
 # **Make**
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
-cars %>%
-  drop_na(lp100km_hwy) %>%
-  drop_na(lp100km_city) %>%
-  ggplot(aes(x = lp100km_hwy, y = lp100km_city)) + 
-  geom_point() + 
-  theme_minimal() +
-  labs(title = "Relationship between Fuel Efficiency in the City /n and on the Highway for different Makes", 
-       y = "Litres per 100 Kilometers in the City", 
-       x = "Litres per 100 Kilometers on the Highway") +
-  facet_wrap(~ make)
+
 ```
 
 # **Conclusion**

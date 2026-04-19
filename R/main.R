@@ -19,6 +19,6 @@ table(cars$transmission)
 table(cars$eng_size)
 
 source("R/01_transform_data.R")
-#source("R/02_data_visualization.R")
+source("R/02_data_visualization.R")
 
 
