@@ -3,8 +3,7 @@
 #### Figure 1: Emission Sektor ----
 f_emission_sector <- ggplot(emission_usa, aes(x = Year, y = vals_new, colour = Sectors)) + 
   geom_line(size = 1) + 
-  labs(title = "Figure 1: Emissions of all Sectors vs. Transportation in the US", 
-       y = "Tonnes of Carbon Dioxid in Bilion", 
+  labs(y = "Tonnes of Carbon Dioxid in Bilion", 
        x = "Years") + 
   theme_minimal() + 
   theme(
@@ -156,7 +155,7 @@ f_nGears_city <- cars_processed %>%
   theme(legend.position = "none") + 
   scale_y_continuous(limits = c(2, 32))
 
-f_nGears_hwy / f_nGears_city + 
+f_nGears_total <- f_nGears_hwy / f_nGears_city + 
   plot_layout(axes="collect") + 
   plot_annotation(title = "Figure 4: Relationship between the Number of Gears and Fuel Efficiency...", 
                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))
@@ -242,7 +241,7 @@ f_share_cylinders <- cars_cylinders %>%
 f_nCylinders_total <-  f_nCylinders_city / f_nCylinders_hwy + 
   plot_layout(axes="collect") 
 
-(f_nCylinders_total |  f_share_cylinders) + 
+f_Cylinders <- (f_nCylinders_total |  f_share_cylinders) + 
   plot_layout(widths = c(10, 1)) + 
   plot_annotation(title = "Figure 6: Relationship between the Number of Cylinders \n and Fuel Efficiency...", 
                   theme = theme(plot.title = element_text(hjust = 0.5, face = "bold")))

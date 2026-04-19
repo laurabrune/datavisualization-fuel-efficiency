@@ -1,27 +1,33 @@
 ---
-title: 'Third Assignment: What car characteristics increase Fuel Efficiency?'
+title: 'What car characteristics increase Fuel Efficiency?'
 author: "Laura Brune"
-date: "2026-01-31"
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
-  word_document: default
+date: "2026-04-19"
+format: html
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, error = TRUE)
+# Emissions of American Cars: A Datavisualization 
+
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+
+
+setwd("../")
+source("R/main.R")
 ```
 
-```{r message=FALSE, warning=FALSE, include=FALSE}
 
-```
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-emission-sector"
 
-# **Emissions of American Cars: A Datavisualization** 
 
-
-```{r, echo=FALSE, message=FALSE, warning=FALSE}
-
+f_emission_sector
 ```
 
 
@@ -32,37 +38,65 @@ One major driver of climate change are emissions from transportation (Figure 1).
 The data is from... However, it should be mentioned that it only contains cars for the American market. Therefore, the analysis cannot be exceeded to other markets like the European one. 
 
 
-# ** Fuel efficiency over time** 
+# Fuel efficiency over time 
 
-```{r eff over time, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-time"
 
+
+f_time
 ```
 Figure 1 shows that fuel consumption decreased between 1984 and 2015, meaning fuel usage increased during this period. However, this effect has only been clearly visible since the late 2000s. Prior to this, fuel efficiency remained largely unchanged. This shift could be explained by increased car regulations in the EU. Even though European car companies produce different car models for the American and European markets, there could still be spill-over effects.  
 
 While this explanation seems reasonable, it cannot be confirmed with the data. Figure 2 shows that there are only minor differences in fuel efficiency between European and non-European car companies over time. Although European cars have become slightly more fuel efficient since around 2007, this is not sufficient to explain the overall trend. This suggests that EU policy regulations are not having a spill-over effect on the American car market. As there were no other significant events in the late 2000s, this report considers technical reasons for the increase in fuel efficiency. 
 
-```{r eff over time for eu and non eu, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-eu-nonEu-time"
+#| fig-height: 6
 
+
+f_EU_NonEU_time
 ```
 
-# ** Automatic Gear**
+# Automatic Gear
 
 A significant development in American car technology is the growing popularity of automatic gearboxes. Unlike in Europe, where they were initially unpopular, automatic gears have always been popular in the United States as they were first developed by General Motors. Figure 3 shows that, by the mid-1980s, more than half of American cars had automatic gears. 
 
 Over the decades, the proportion of cars with automatic gearboxes has grown. By 2014, more than four fifths of American cars had automatic gearboxes. Automatic gearboxes are generally better for fuel efficiency because they keep the gears within their optimal speed range. This is verified by the data, which shows that fuel efficiency increases with a higher share of automatic transmission. This relationship can be seen for both highway and city driving. The relationship is stronger for city driving than for highway driving. 
 
-```{r fig.height=7, message=FALSE, warning=FALSE, include=FALSE}
 
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-automatic-year"
+#| fig-height: 8
+
+
+f_automatic_year_total
 ```
 
-```{r Share Automatic, fig.height=8, message=FALSE, warning=FALSE, echo=FALSE}
+# Number of Gears
 
-```
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-n-gears"
+#| fig-height: 6
 
-# ** Number of Gears**
 
-```{r n of gears on eff, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
-
+f_nGears_total
 ```
 
 Figure 4 shows two box plots for each number of gear: one showing fuel efficiency on the highway and one showing fuel efficiency in the city. In general, more gears lead to better fuel efficiency. However, there are differences between highway and city traffic. Three and four gears perform similarly on the highway, with an average fuel consumption of around 11 litres per 100 kilometres. However, the median for three gears is lower in city traffic, indicating better fuel efficiency for three gears than four in the city. 
@@ -71,39 +105,59 @@ Five gears perform better than four gears in both settings. On the highway, fuel
 
 Figure 4 shows similar results for driving on the highway. Here, the variation decreases further with an increasing number of gears. While cars with three gears have a median fuel consumption of about 11 litres per 100 kilometres, cars with eight or nine gears have a median fuel consumption of about 9 litres per 100 kilometres. 
 
-```{r echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-n-gears-year"
+#| fig-height: 6
 
+
+f_nGears_annual_total
 ```
 
 Figure 5 illustrates the correlation between the number of gears and fuel efficiency. The graph shows the mean fuel efficiency and the mean number of gears. The colours indicate whether four-, five- or six-gear cars made up the majority in a given year. Four-gear cars dominated the American car market in the 1980s, 1990s and early 2000s. During this period, a relationship could only be seen between the number of gears and fuel efficiency for highway driving, but not for city driving. This trend continued from 2005 to 2008, when five-speed cars dominated the market. For highway driving, fuel efficiency increased with the number of gears, but there was no relationship between the two variables for city driving.  
 
 It is only since 2009 that a relationship between the two variables has been evident in both settings: an increasing number of gears leads to increasing fuel efficiency for both highway and city driving. 2009 was also the year in which six-gear cars first dominated the market. Although 2009 was relatively fuel efficient compared to the other years of the 2000s, it was only similar to the mid-1980s for city traffic. Since 2010, however, fuel efficiency has also increased notably for city driving.
 
-# **Number of Cylinders**
+# Number of Cylinders
 
-```{r n of cyl on eff, echo=FALSE, fig.height=6, message=FALSE, warning=FALSE}
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-n-cylinders"
+#| fig-height: 6
 
-  
 
-  
+f_Cylinders
 ```
 
 Figure 6 shows that fuel efficiency increases with fewer cylinders. Cars with three cylinders are the most efficient in both city traffic and on the highway. On the highway, fuel efficiency is around six litres per 100 km. The median fuel efficiency decreases with each additional cylinder, except for 12-cylinder engines in city traffic and 10- and 12-cylinder engines on the highway. 
 
 Since most engines have four, six or eight cylinders, comparing these categories is especially relevant. Engines with four cylinders have a fuel efficiency of around 12 litres per 100 kilometres in the city and 9 litres per 100 kilometres on the hghway. In contrast, six-cylinder engines have a fuel efficiency of around 15 litres in the city and 11 litres on the highway. The difference is between two and three litres. Eight-cylinder engines are even less efficient, at around 18 litres per kilometre in the city and 14 litres per kilometre on the highway. This is one third more than four-cylinder engines in the city. 
 
-# **Make**
-```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Make 
+```{r}
+#| warning: false
+#| error: false
+#| message: false
+#| echo: false
+#| label: "fig-make"
 
+
+f_make
 ```
 
-# **Conclusion**
+# Conclusion
 
 Fuel efficiency is important for minimising the car industry's impact on climate change while still providing people with individual mobility. To test which variables influence fuel efficiency, visualisations of different car variations for the American market from 1984 to 2014 were presented. Although the data can only be generalised to a certain extent for causal conclusions, it still provides a useful overview of the characteristics that explain fuel efficiency. 
 
 Fuel efficiency increased in the late 2000s for both highway and urban driving. This was not due to a spill-over effect of EU policy regulation, but was caused by the technical evolution of transmissions and engines. Automatic gearboxes and a greater number of gears are related to increased fuel efficiency. In particular, the prevalence of six-speed cars since 2009 can explain the increase in fuel efficiency during this period. Additionally, the lower the number of cylinders, the greater the fuel efficiency. Cars with four cylinders perform much better in city traffic and on the highway than cars with six or eight cylinders. However, more technical analysis of different engines is necessary to draw further conclusions and give empirical based suggestion. 
 
-# **Literatur**
+# Literatur
 
 Ferrer, A. L., & Thomé, A. (2023). Carbon Emissions in Transportation: A Synthesis Framework. Sustainability, 15, 8475. https://doi.org/10.3390/su15118475
 
