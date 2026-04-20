@@ -24,8 +24,11 @@ knitr::opts_chunk$set(
 
 
 ```{r}
-setwd("../")
-source("R/main.R")
+#| label: load-main
+
+
+library(here)
+source(here("R", "main.R"))
 ```
 
 
@@ -35,8 +38,8 @@ This report investigates which characteristics influence fuel efficiency of cars
 # Fuel Efficiency over Time 
 
 ```{r}
-#| label: "Fuel Efficiency over Time"
-#| fig-cap: "Fuel efficiency over time"
+#| label: "fig-fuel-efficiency-over-time"
+#| fig-cap: "Fuel efficiency over Time"
 
 
 f_time
@@ -52,7 +55,8 @@ f_time
 # Automatic Gear
 
 ```{r}
-#| label: "fig-automatic-year"
+#| label: "fig-automatic-gear-per-year"
+#| fig-cap: "Relationship between the Share of Automatic Gear and Fuel Efficiency per Year"
 #| fig-height: 10
 
 
@@ -69,6 +73,7 @@ f_automatic_year_total
 
 ```{r}
 #| label: "fig-n-gears"
+#| fig-cap: "Relationship between the Number of Gears and Fuel Efficiency"
 #| fig-height: 8
 
 
@@ -77,6 +82,7 @@ f_nGears_total
 
 ```{r}
 #| label: "fig-n-gears-year"
+#| fig-cap: "Mean and Predominant Number of Gears, \n Time and Fuel Efficiency"
 #| fig-height: 8
 
 
@@ -91,6 +97,7 @@ f_nGears_annual_total
 
 ```{r}
 #| label: "fig-n-cylinders"
+#| fig-cap: "Relationship between the Number of Cylinders \n and Fuel Efficiency"
 #| fig-height: 8
 
 
@@ -103,7 +110,8 @@ f_Cylinders
 
 # Brand 
 ```{r}
-#| label: "fig-make"
+#| label: "fig-top-12-brand"
+#| fig-cap: "Relationship between Fuel Efficiency in the City \n and on the Highway for the Top 12 Brands"
 
 
 f_make
@@ -116,12 +124,14 @@ f_make
 # Conclusion
 
 **Key Findings**
+
 -  fuel efficiency decreased since the late 2000s
 -  a higher share of automatic gears is associated with better fuel efficiency 
 -  cars with a higher number of gears have in general a better fuel efficiency 
 -  a lower number of cylinders is associated with a higher fuel efficiency 
 
 **Limitations**
+
 -  only descriptive analysis is used 
 -  to confirm results a technical analysis is needed 
 

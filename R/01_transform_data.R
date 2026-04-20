@@ -44,12 +44,8 @@ cars_processed$number_gear[cars_processed$number_gear == "(AV)" | cars_processed
 # create some new variables about mean and predominant gear 
 cars_processed$number_gear <- as.numeric(cars_processed$number_gear)
 
-# New Variable: make is from a EU-country 
-eu_brands <- c("Audi", "BMW", "Mercedes-Benz", "Volkswagen", "Volvo")
-cars_processed <- cars_processed %>% mutate(is_eu = make %in% eu_brands)
-
 # save data 
-write.csv(cars_processed,"data/processed/cars_processed.csv")
+write.csv(cars_processed, here("data/processed/cars_processed.csv"))
 
 #### Annual car data ----
 cars_annual <- cars_processed %>%
@@ -76,7 +72,7 @@ cars_annual <- cars_processed %>%
   ungroup()
 
 # save data 
-write.csv(cars_annual,"data/processed/cars_annual_processed.csv")
+write.csv(cars_annual,here("data/processed/cars_annual_processed.csv"))
 
 
 #### Share of Cylinders per Year ----
@@ -88,24 +84,14 @@ cars_cylinders <- cars_processed %>%
   filter(!is.na(share) & share > 0)
 
 # save data 
-write.csv(cars_cylinders,"data/processed/cars_cylinders_processed.csv")
+write.csv(cars_cylinders,here("data/processed/cars_cylinders_processed.csv"))
 
-#### Emission per Sector Data ----
-# filter for us and transportation, create sum of all sectors and transform to long format 
-emission_usa <- emission %>%
-  filter(Entity == "United States") %>%
-  pivot_longer(cols = Agriculture:`Aviation and shipping`, names_to= "Sectors", values_to= "values") %>%
-  group_by(Year) %>%
-  mutate(
-    `All Sectors` = sum(values)
-  ) %>%
-  filter(Sectors == "Transport") %>% 
-  select(-Entity, -Code, -Sectors) %>%
-  rename(Transportation = values) %>%
-  pivot_longer(cols = c(Transportation, `All Sectors`), names_to = "Sectors", values_to = "vals") %>%
-  mutate(vals_new = vals / 1000000000)
-
-rm(emission)
+#### Only the top ten brands ----
+cars_top12_brands <- cars_processed %>%
+  group_by(make) %>%
+  summarise(n_models_brand = n()) %>%
+  slice_max(n_models_brand, n = 12) %>%
+  left_join(cars_processed, by = "make")
 
 # save data 
-write.csv(cars,"data/processed/emission_usa_processed.csv")
+write.csv(cars_top12_brands,here("data/processed/cars_top12_brands_processed.csv"))

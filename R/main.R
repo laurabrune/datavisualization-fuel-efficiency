@@ -1,14 +1,18 @@
 # main 
 
-library(tidyverse)
-library(ggplot2)
-library(dplyr)
-library(patchwork)
-library(ggrepel)
+library(here)
 library(readr)
 
-cars <- read_csv('data/raw/cars.csv')
-emission <- read_csv("data/raw/ghg-emissions-by-sector.csv")
+library(tidyverse)
+library(dplyr)
+
+library(ggplot2)
+library(patchwork)
+library(ggrepel)
+
+
+
+cars <- read_csv(here("data/raw/cars.csv"))
 
 # overview 
 summary(cars)
@@ -18,7 +22,8 @@ table(cars$class)
 table(cars$transmission)
 table(cars$eng_size)
 
-source("R/01_transform_data.R")
-source("R/02_data_visualization.R")
+here()
+source(here("R", "01_transform_data.R"))
+source(here("R", "02_data_visualization.R"))
 
 
