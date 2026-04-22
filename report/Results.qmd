@@ -1,7 +1,7 @@
 ---
-title: 'What car characteristics influence Fuel Efficiency? A Datavisualization'
+title: 'What car characteristics influence Fuel Efficiency? A Data Visualization'
 author: "Laura Brune"
-date: "2026-04-19"
+date: "2026-04-22"
 format: 
   html: 
     toc: true 
@@ -32,7 +32,7 @@ source(here("R", "main.R"))
 ```
 
 
-This report investigates which characteristics influence fuel efficiency of cars on the American market between 1984 and 2014 with data visualizations. The variables: type of gear, number of gears, number of cylinders and brand are investigated. The data is from...
+This report investigates with data visualizations which characteristics influence fuel efficiency of cars on the American market between 1984 and 2014. The variables analysed are: type of gear, number of gears, number of cylinders and brand. The data is from...
 
 
 # Fuel Efficiency over Time 
@@ -45,8 +45,9 @@ This report investigates which characteristics influence fuel efficiency of cars
 f_time
 ```
 
--   1985 the average fuel efficiency of an American car was 14.3 liters in the city and 13.3 liters on the highway 
--   2014 the average fuel efficiency was 12.4 liters in the city and 8.9 liters on the highway
+-   in 1985 the average fuel consumption of an American car was 14.3 liters in the city and 13.3 liters on the highway 
+-   in 2014 the average fuel consumption was 12.4 liters in the city and 8.9 liters on the highway
+-   although both measurements decreased overtime, fuel efficiency increased higher on the highway
 -   between 1985 and 2006 fuel consumption stayed on a similar level
 -   only since 2006 cars on the American market got more efficient 
 
@@ -65,7 +66,7 @@ f_automatic_year_total
 
 -   automatic gearboxes were a popular development in the American car market 
 -   by the mid-1980s, more than half of American cars had automatic gears 
--   by 2014, more than four fifths of American cars had automatic gearboxes
+-   by 2014, the share of automatic gearboxes increased to more than four fitht 
 -   Figure 3 shows a relationship between a higher share of automatic gearboxes and fuel efficiency: the higher the share of automatic gearboxes the higher is the average fuel efficiency
 -   however this relationship is non-linear and intensifies in the late 2000s
 
@@ -125,7 +126,7 @@ f_make
 
 **Key Findings**
 
--  fuel efficiency decreased since the late 2000s
+-  fuel efficiency increased since the late 2000s
 -  a higher share of automatic gears is associated with better fuel efficiency 
 -  cars with a higher number of gears have in general a better fuel efficiency 
 -  a lower number of cylinders is associated with a higher fuel efficiency 
