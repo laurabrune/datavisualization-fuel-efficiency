@@ -32,7 +32,7 @@ source(here("R", "main.R"))
 ```
 
 
-This report investigates with data visualizations which characteristics influence fuel efficiency of cars on the American market between 1984 and 2014. The variables analysed are: type of gear, number of gears, number of cylinders and brand. The data is from...
+This report investigates with data visualizations which characteristics influence fuel efficiency of cars on the American market between 1984 and 2014. The variables analysed are: type of gear, number of gears, number of cylinders and brand. The data is from the US Department of Energy and available here: https://www.fueleconomy.gov/feg/download.shtml. 
 
 
 # Fuel Efficiency over Time 
@@ -138,4 +138,6 @@ f_make
 
 # Data Source 
 
-cite data 
+Fuel economy data is provided by the U.S. Department of Energy:
+
+<https://www.fueleconomy.gov/feg/download.shtml>

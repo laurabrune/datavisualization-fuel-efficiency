@@ -1,9 +1,77 @@
-What car characteristics influence Fuel Efficiency? A Data Visualization
+---
+editor_options: 
+  markdown: 
+    wrap: 72
+---
 
-This project uses data from 1984 to 2015 to analyse data on fuel efficiency on cars in the American market. It investigates which characteristics are associated with a variance in fuel efficiency. 
-Aim of the project is to use data visualizations in R to get an overview about the topic. The data is from...
+# Short Description
 
-This project was originally an assignment from the seminar "Data Management and Visualization" from Stefan Rose. 
+This project presents a data visualization report exploring which car
+characteristics influence fuel efficiency in the American market between
+1984 and 2014.
 
-The project consists of a main R-script that executes two other scripts, one about variable transformation and one about data visualization. The report can be seen as Quatro Document and html. 
-Visualizations can be seen separately in the output folder. 
+The analysis is built using Quarto and is accessible in two formats:
+
+-   as a Quarto document for reproducible analysis
+
+-   as a published website via GitHub Pages
+
+The report investigates how the following variables relate to fuel
+efficiency:
+
+-   Type of gear (automatic vs. manual)
+
+-   Number of gears
+
+-   Number of cylinders
+
+-   Car brand
+
+A key aspect of this project is that the research question is addressed
+primarily through data visualization rather than formal statistical
+modeling. Instead of building regression models or testing hypotheses,
+the analysis relies on carefully designed plots with `ggplot2` to reveal
+patterns, trends, and relationships in the data.
+
+This approach enables an intuitive understanding of the data, while
+requiring careful interpretation, as visual patterns do not necessarily
+imply causation.
+
+# Key findings
+
+Some of the key findings are:
+
+-   Fuel efficiency improved significantly after the late 2000s
+
+-   Automatic gearboxes are associated with higher fuel efficiency
+
+-   More gears generally correlate with better efficiency
+
+-   Fewer cylinders tend to improve fuel consumption Project Structure
+
+# Project structure
+
+.
+├── R/
+│   ├── main.R                
+│   ├── 01_transform_data.R       # Data cleaning and transformation
+│   └── 02_data_visualization.R   # Plot creation
+├── data
+├── output                        # all visualizations
+├── report/
+│   ├── fuel_efficiency_report.R  # Report
+
+
+The report can be rendered using Quarto. All data preparation and
+visualization steps are organized in R/main.R, which calls
+01_transform_data.R and 02_data_visualization.R.
+
+# Data Source
+
+Fuel economy data is provided by the U.S. Department of Energy:
+
+<https://www.fueleconomy.gov/feg/download.shtml>
+
+# Author
+
+Laura Brune
