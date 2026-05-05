@@ -2,7 +2,9 @@
 
 This project presents a data visualization report exploring which car
 characteristics influence fuel efficiency in the American market between
-1984 and 2014.
+1984 and 2014. It was original created as an Assignment in the course 
+"Data Management & Visualization" taught by Stefan Rose at the University of 
+Cologne. 
 
 The analysis is built using Quarto and is accessible in two formats:
 
