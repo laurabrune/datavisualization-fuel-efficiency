@@ -1,9 +1,3 @@
----
-editor_options: 
-  markdown: 
-    wrap: 72
----
-
 # Short Description
 
 This project presents a data visualization report exploring which car
@@ -50,17 +44,6 @@ Some of the key findings are:
 -   Fewer cylinders tend to improve fuel consumption Project Structure
 
 # Project structure
-
-.
-├── R/
-│   ├── main.R                
-│   ├── 01_transform_data.R       # Data cleaning and transformation
-│   └── 02_data_visualization.R   # Plot creation
-├── data
-├── output                        # all visualizations
-├── report/
-│   ├── fuel_efficiency_report.R  # Report
-
 
 The report can be rendered using Quarto. All data preparation and
 visualization steps are organized in R/main.R, which calls
