@@ -1,5 +1,7 @@
 # Short Description
 
+https://laurabrune.github.io/datavisualization-fuel-efficiency/
+
 This project presents a data visualization report exploring which car
 characteristics influence fuel efficiency in the American market between
 1984 and 2014. It was original created as an Assignment in the course 
@@ -10,7 +12,7 @@ The analysis is built using Quarto and is accessible in two formats:
 
 -   as a Quarto document for reproducible analysis
 
--   as a published website via GitHub Pages
+-   as a published website via GitHub Pages: https://laurabrune.github.io/datavisualization-fuel-efficiency/
 
 The report investigates how the following variables relate to fuel
 efficiency:
